@@ -80,13 +80,13 @@ public class Calculator extends JFrame {
         initializeComponents();
         setVisible(true);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setBounds(0, 0, SIZE_X, SIZE_Y);
+        setSize(SIZE_X, SIZE_Y);
         setTitle("  Calculator");
-        this.setIconImage(icon.getImage());
-        this.setResizable(false);
-        this.setLayout(new BorderLayout());
-        this.add(display, BorderLayout.PAGE_START);
-        this.add(buttonsPanel, BorderLayout.CENTER);
+        setIconImage(icon.getImage());
+        setResizable(false);
+        setLayout(new BorderLayout());
+        add(display, BorderLayout.PAGE_START);
+        add(buttonsPanel, BorderLayout.CENTER);
         setLocationRelativeTo(null);
 
         // initialize the final variables
@@ -196,6 +196,7 @@ public class Calculator extends JFrame {
             String buttonText = button.getText();
             boolean updateDisplay = true;
 
+            // if the button clicked is a number or a floating point "."
             if (numbers.contains(buttonText)) {
                 resetOperationButtonsColor();
                 if (isResult) {
@@ -210,18 +211,24 @@ public class Calculator extends JFrame {
                 }
             }
 
+            // if the button clicked is "+/-"
             else if (buttonText.equals(SIGN)) {
-                if (currentNum.charAt(0) == '-') {
-                    currentNum = currentNum.substring(1);
-                } else {
-                    currentNum = "-" + currentNum;
+                if (Double.parseDouble(currentNum) != 0) {
+                    if (currentNum.charAt(0) == '-') {
+                        currentNum = currentNum.substring(1);
+                    } else {
+                        currentNum = "-" + currentNum;
+                    }
                 }
             }
 
+            // if the button clicked is "C"
             else if (buttonText.equals(CLEAR)) {
                 currentNum = "0";
+                prevNum = null;
             }
 
+            // if the button clicked is "%"
             else if (buttonText.equals(PERCENTAGE)) {
                 try {
                     double value = Double.parseDouble(currentNum);
@@ -235,15 +242,20 @@ public class Calculator extends JFrame {
                 }
             }
 
+            // if the button clicked is "del"
             else if (buttonText.equals(DEL)) {
                 if (currentNum.length() < 2) {
                     currentNum = "0";
                 }
                 else {
                     currentNum = currentNum.substring(0, currentNum.length() - 1);
+                    if (currentNum.equals("-")) {
+                        currentNum = "0";
+                    }
                 }
             }
 
+            // if the button clicked is "="
             else if (buttonText.equals(EQUAL)) {
                 if (prevNum != null) {
                     try {
@@ -282,6 +294,7 @@ public class Calculator extends JFrame {
                 }
             }
 
+            // if the button clicked is an operation (+, -, x, /)
             else {
                 operation = buttonText;
                 updateDisplay = false;
@@ -289,7 +302,7 @@ public class Calculator extends JFrame {
                 button.setBackground(SAVE_COLOR);
                 if (prevNum == null) {
                     prevNum = currentNum;
-                    currentNum = "";
+                    currentNum = "0";
                 }
             }
 
